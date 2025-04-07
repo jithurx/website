@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Star Background Animation</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: black;
+        /* filter: opacity(0.95); */
+      }
+      canvas {
+        display: block;
+      }
+      #banner{
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 50px;
+        background-color: black;
+        /* background: rgba(0, 0, 0, 0.7);  */
+        color: white;
+        padding: 10px;
+        text-align: center;
+        font-family: 'Arial',Helvetica;
+      }
+    </style>
+  </head>
+  <body>
+
+    <canvas id="starCanvas"></canvas>
+    <div id="banner">banner</div>
+    <div>me</div>
+    <div>intrest</div>
+    <div>need</div>
+    <div>project</div>
+    <div>contact</div>
+    <script>
+      // Setup canvas and context
+      const canvas = document.getElementById("starCanvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      // Parameters
+      const numStars = 1100;
+      const sphereRadius = 3;
+      const stars = [];
+
+      // Camera settings for simple perspective projection
+      const cameraZ = 3;
+      // scale factor to convert 3D coordinates into screen space (tweak as needed)
+      const scaleFactor = Math.min(canvas.width, canvas.height) / 4;
+
+      // Fixed rotation (group rotation) around Z (45°)
+      const fixedAngle = Math.PI / 4;
+      const cosFixed = Math.cos(fixedAngle);
+      const sinFixed = Math.sin(fixedAngle);
+
+      // Utility: generate a uniformly distributed point in a sphere of given radius
+      function randomPointInSphere(radius) {
+        // Using spherical coordinates with a cube-root scaling for radius
+        const u = Math.random();
+        const v = Math.random();
+        const w = Math.random();
+        const r = radius * Math.cbrt(u); // cube-root ensures uniform distribution
+        const theta = Math.acos(1 - 2 * v); // theta in [0, PI]
+        const phi = 2 * Math.PI * w; // phi in [0, 2PI]
+        const x = r * Math.sin(theta) * Math.cos(phi);
+        const y = r * Math.sin(theta) * Math.sin(phi);
+        const z = r * Math.cos(theta);
+        return { x, y, z };
+      }
+
+      // Generate the stars
+      for (let i = 0; i < numStars; i++) {
+        stars.push(randomPointInSphere(sphereRadius));
+      }
+
+      // Dynamic rotation angles (start at 0)
+      let rotationX = 0;
+      let rotationY = 0;
+
+      // For time-based animation
+      let lastTime = performance.now();
+
+      function animate(currentTime) {
+        // Calculate delta time in seconds
+        const delta = (currentTime - lastTime) / 1000;
+        lastTime = currentTime;
+
+        // Update rotation angles (using same speed factors as the React code)
+        rotationX -= delta / 10;
+        rotationY -= delta / 15;
+
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "white";
+
+        // For each star, apply rotations and project to 2D
+        for (let i = 0; i < numStars; i++) {
+          const star = stars[i];
+          let { x, y, z } = star;
+
+          // --- Dynamic Rotation ---
+          // Rotation around X-axis
+          const cosX = Math.cos(rotationX);
+          const sinX = Math.sin(rotationX);
+          let y1 = y * cosX - z * sinX;
+          let z1 = y * sinX + z * cosX;
+          // Rotation around Y-axis
+          const cosY = Math.cos(rotationY);
+          const sinY = Math.sin(rotationY);
+          let x1 = x * cosY + z1 * sinY;
+          let z2 = -x * sinY + z1 * cosY;
+
+          // --- Fixed Rotation around Z-axis (45°) ---
+          let x2 = x1 * cosFixed - y1 * sinFixed;
+          let y2 = x1 * sinFixed + y1 * cosFixed;
+          let z3 = z2;
+
+          // --- Perspective Projection ---
+          // Avoid division by zero and clip points behind camera
+          const perspective = cameraZ / (cameraZ - z3);
+          const screenX = x2 * perspective * scaleFactor + canvas.width / 2;
+          const screenY = y2 * perspective * scaleFactor + canvas.height / 2;
+
+          // Optionally, size attenuation could be applied (here we keep a fixed dot size)
+          const size = 0.5; // tweak if necessary
+
+          // Draw the star as a filled circle (or point)
+          ctx.beginPath();
+          ctx.arc(screenX, screenY, size, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+
+        // Request next frame
+        requestAnimationFrame(animate);
+      }
+
+      // Start the animation
+      requestAnimationFrame(animate);
+
+      // Resize canvas on window resize
+      window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+    </script>
+  </body>
+</html>
