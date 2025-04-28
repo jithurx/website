@@ -1,170 +1,422 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>jithurx</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="images/logo.png">
+
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Caveat:wght@700&family=Gochi+Hand&family=Instrument+Serif:ital@0;1&family=Pixelify+Sans:wght@400;700&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,600,700&display=swap" rel="stylesheet">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+ 
+    <link rel="icon" type="image/png" href="images/rx1.png">
+
     <style>
+
+      :root {
+        --color-bg-dark: #1a1a1a;
+        --color-text-light: #e0e0e0;
+        --color-text-muted: #a0a0a0;
+        --color-border-light: #444444;
+        --color-primary-glow: #7f7cec; /* Lighter Purple for glow/accent */
+        --color-secondary-glow: #d4ff3a; /* Brighter Lime Green */
+        --color-accent1-glow: #fff050; /* Brighter Yellow */
+        --color-accent2-glow: #ffafff; /* Brighter Pink */
+        --color-accent3-glow: #ffae4d; /* Brighter Orange */
+
+        /* Glitch Colors */
+        --glitch-color1: var(--color-secondary-glow); /* Lime */
+        --glitch-color2: var(--color-accent2-glow);   /* Pink */
+      }
+
       html,
       body {
-        font-family: 'Nunito', sans-serif;
+        font-family: 'General Sans', sans-serif;
         margin: 0;
         padding: 0;
-        overflow: hidden;
-        background: black;
+        overflow: hidden; 
+        background-color: var(--color-bg-dark);
+        color: var(--color-text-light);
       }
-      canvas {
-        filter: blur(0px);
-        display: block;
-      }
-      /* New overlay styling */
-      .overlay {
-        position: fixed;
+
+      canvas#starCanvas {
+        position: fixed; 
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(255, 255, 255, 0); /* Translucent white */
+        z-index: 0; /* Behind content */
+        display: block;
+      }
+
+      /* Content Container - On top of canvas */
+      .content-container {
+        position: relative; /* Ensures content stays within viewport flow if needed */
+        z-index: 10; /* Ensure it's above canvas */
+        width: 100%;
+        min-height: 100vh; /* Use min-height to allow content growth */
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         text-align: center;
-        z-index: 1000; /* Sits on top of other content */
+        padding: 40px 20px; /* Padding for spacing */
+        box-sizing: border-box; /* Include padding in height */
       }
-      .overlay img {
-        border-radius: 10%;
-        max-width: 300px;
-        margin-bottom: 20px;
+
+      /* Main Heading Styles */
+      .content-container .name-heading {
+        font-family: 'Anton', sans-serif;
+        font-size: clamp(3rem, 10vw, 6rem);
+        color: var(--color-text-light);
+        margin-bottom: 0.5rem;
+        line-height: 1.1;
+        text-shadow: 3px 3px 0px var(--color-secondary-glow),
+                     -3px -3px 0px var(--color-primary-glow);
+        transform: rotate(-2deg);
+        letter-spacing: 2px;
+        transition: transform 0.3s ease-out;
+        position: relative;
       }
-      .overlay p {
-        font-size: 1.2rem;
-        margin-bottom: 15px;
-        color: #ffffff;
+      .content-container .name-heading:hover {
+          transform: rotate(1deg) scale(1.02);
       }
-      .overlay a {
-        background: #fff;
-        color: #000;
-        padding: 10px 20px;
+
+      /* Style for the separated parts of the name */
+      .name-part {
+          display: inline-block; /* Allows transforms without breaking flow */
+          position: relative; /* Needed for glitch parent */
+          /* Inherit text shadows from parent */
+          text-shadow: inherit;
+      }
+
+      /* --- INTENSE Glitch Effect Styles --- */
+      .glitch-text {
+          /* Inherits position: relative from .name-part */
+          /* Add the shaking animation */
+          animation: shake 0.08s infinite linear alternate; /* Slightly faster, alternate */
+      }
+
+      .glitch-text::before,
+      .glitch-text::after {
+          content: attr(data-text); /* Use data-text attribute */
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          background: var(--color-bg-dark); /* Match background */
+          /* Make text shadows more pronounced and contrasting */
+          text-shadow: -4px 4px 0px var(--glitch-color1), /* Larger offsets */
+                       4px -4px 0px var(--glitch-color2);
+          will-change: transform, clip-path, opacity;
+      }
+
+      .glitch-text::before {
+          animation: glitch-anim-1 0.6s infinite steps(2, end) alternate-reverse; /* Faster, steps */
+      }
+
+      .glitch-text::after {
+          animation: glitch-anim-2 0.4s infinite steps(1, start) alternate-reverse; /* Even Faster, steps */
+      }
+
+      /* More aggressive keyframes with steps for jumpier effect */
+      @keyframes glitch-anim-1 {
+          0%   { clip-path: inset(45% 0 50% 0); transform: translate(-7px, 4px); opacity: 0.7; }
+          10%  { clip-path: inset(15% 0 80% 0); transform: translate(5px, -3px); }
+          20%  { clip-path: inset(70% 0 10% 0); transform: translate(-6px, 6px); opacity: 0.5; }
+          30%  { clip-path: inset(30% 0 65% 0); transform: translate(4px, -5px); }
+          40%  { clip-path: inset(5% 0 90% 0);  transform: translate(-8px, 2px); opacity: 0.8; }
+          50%  { clip-path: inset(85% 0 5% 0);  transform: translate(7px, -4px); }
+          60%  { clip-path: inset(40% 0 42% 0); transform: translate(-5px, 5px); opacity: 0.4; }
+          70%  { clip-path: inset(22% 0 70% 0); transform: translate(6px, -2px); }
+          80%  { clip-path: inset(75% 0 12% 0); transform: translate(-7px, 3px); opacity: 0.9; }
+          90%  { clip-path: inset(10% 0 88% 0); transform: translate(5px, -5px); }
+          100% { clip-path: inset(50% 0 33% 0); transform: translate(-6px, 2px); opacity: 0.6; }
+      }
+
+      @keyframes glitch-anim-2 {
+          0%   { clip-path: inset(8% 0 85% 0); transform: translate(5px, -4px); opacity: 0.8; }
+          15%  { clip-path: inset(66% 0 15% 0); transform: translate(-6px, 3px); }
+          30%  { clip-path: inset(20% 0 75% 0); transform: translate(4px, 5px); opacity: 0.5; }
+          45%  { clip-path: inset(48% 0 48% 0); transform: translate(-5px, -4px); }
+          60%  { clip-path: inset(88% 0 2% 0); transform: translate(7px, 2px); opacity: 0.9; }
+          75%  { clip-path: inset(30% 0 60% 0); transform: translate(-8px, -3px); }
+          90%  { clip-path: inset(5% 0 92% 0); transform: translate(6px, 4px); opacity: 0.7; }
+          100% { clip-path: inset(60% 0 25% 0); transform: translate(-5px, -2px); opacity: 1.0; }
+      }
+
+      /* Shaking Animation for the main .glitch-text element */
+      @keyframes shake {
+          0%, 100% { transform: translate(0, 0) rotate(-2deg); }
+          10% { transform: translate(-4px, 3px) rotate(-4deg); }
+          20% { transform: translate(3px, -4px) rotate(1deg); }
+          30% { transform: translate(-5px, 5px) rotate(-3deg); }
+          40% { transform: translate(4px, -3px) rotate(2deg); }
+          50% { transform: translate(-3px, 4px) rotate(-2deg); }
+          60% { transform: translate(5px, -5px) rotate(0deg); }
+          70% { transform: translate(-4px, 3px) rotate(-4deg); }
+          80% { transform: translate(3px, -4px) rotate(1deg); }
+          90% { transform: translate(-5px, 5px) rotate(-3deg); }
+      }
+
+      /* --- Typing Animation Tagline Styles --- */
+      .content-container .tagline {
+        font-family: 'Pixelify Sans', sans-serif;
+        font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+        color: var(--color-text-muted);
+        margin-bottom: 3rem;
+        max-width: 90%;
+        min-height: 2.8em; /* Adjust based on font size and line height */
+        line-height: 1.4;
+        letter-spacing: 1px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      /* Blinking Cursor */
+      .tagline .cursor {
+        display: inline-block;
+        background-color: var(--color-secondary-glow); /* Lime cursor */
+        box-shadow: 0 0 5px var(--color-secondary-glow); /* Add glow */
+        width: 10px;
+        height: 1.4em;
+        margin-left: 5px;
+        vertical-align: middle;
+        animation: blink 0.7s infinite steps(1, start);
+      }
+
+      @keyframes blink {
+        50% { opacity: 0; }
+      }
+
+      /* --- Social Links Styles --- */
+      .social-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem;
+      }
+
+      .social-links a {
+        color: var(--color-text-light);
+        font-size: 2rem;
         text-decoration: none;
-        border-radius: 5px;
-        transition: background 0.3s;
+        border: 2px solid transparent;
+        padding: 0.5rem;
+        border-radius: 50%;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: inline-block;
+        line-height: 1;
       }
-      .overlay a:hover {
-        background: #333;
+
+      .social-links a:hover {
+        transform: scale(1.2) rotate(-10deg);
+        border-color: currentColor;
+        box-shadow: 0 0 15px currentColor;
       }
+
+      /* Specific Hover Colors */
+      .social-links a.github:hover { color: #bdff57; } /* Lime */
+      .social-links a.linkedin:hover { color: #8c8cff; } /* Purple */
+      .social-links a.instagram:hover { color: #ffb3ff; } /* Pink */
+      .social-links a.spotify:hover { color: #b1f7b4; } /* Light Green */
+      .social-links a.pinterest:hover { color: #ffb866; } /* Orange */
+
+      /* Footer Credit Styles */
+      .footer-credit {
+          position: absolute;
+          bottom: 15px;
+          left: 50%;
+          transform: translateX(-50%);
+          font-family: 'Pixelify Sans', sans-serif;
+          font-size: 1rem;
+          font-weight: 700;
+          color: var(--color-text-muted);
+          padding: 5px 10px;
+          background-color: rgba(0, 0, 0, 0.3);
+          border-radius: 4px;
+          transition: color 0.3s, background-color 0.3s;
+       }
+       .footer-credit:hover {
+           color: var(--color-accent1-glow);
+           background-color: rgba(0, 0, 0, 0.5);
+       }
+
+      /* --- Responsive Adjustments --- */
+      @media (max-width: 768px) {
+        .social-links { gap: 1rem; }
+        .social-links a { font-size: 1.8rem; padding: 0.4rem; }
+        .content-container .tagline { font-size: clamp(1rem, 3vw, 1.5rem); min-height: 2.4em;}
+        .footer-credit { font-size: 0.8rem; }
+      }
+       @media (max-width: 480px) {
+         .content-container .name-heading { font-size: clamp(2.5rem, 12vw, 4rem); }
+         .content-container .tagline { min-height: 4em; } /* Allow more height for wrapping */
+         .social-links a { font-size: 1.6rem; }
+       }
     </style>
-  </head>
-  <body>
+</head>
+<body>
+    <!-- Canvas for Star Animation -->
     <canvas id="starCanvas"></canvas>
 
-    <!-- Overlay element -->
-    <div class="overlay">
-      <img src="images/under-construction.jpg" alt="Under Construction" />
-      <p>💪🏼 by Abhijith R</p>
-      <a href="https://youtu.be/dQw4w9WgXcQ">Contact</a>
+    <!-- Main Content Container -->
+    <div class="content-container">
+      <h1 class="name-heading">
+          <span class="name-part">jithu</span><span class="glitch-text name-part" data-text="rx">rx</span>
+      </h1>
+
+      <!-- Tagline with Typing Animation -->
+      <p id="typing-tagline" class="tagline"><span class="cursor">|</span></p>
+
+      <!-- Social Media Links -->
+       <div class="social-links">
+         <a href="https://github.com/jithurx" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="github" title="GitHub"><i class="fab fa-github"></i></a>
+         <a href="https://linkedin.com/in/jithurx" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="linkedin" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+         <a href="https://instagram.com/abhi.j10" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+         <a href="https://open.spotify.com/user/qy1bghbyedamwm6livaxp7xc0" target="_blank" rel="noopener noreferrer" aria-label="Spotify" class="spotify" title="Spotify"><i class="fab fa-spotify"></i></a> <!-- Replace YOUR_SPOTIFY_ID -->
+         <a href="https://pinterest.com/jithuxr" target="_blank" rel="noopener noreferrer" aria-label="Pinterest" class="pinterest" title="Pinterest"><i class="fab fa-pinterest"></i></a> <!-- Replace your_pinterest -->
+       </div>
+
+      <!-- Footer Credit -->
+      <div class="footer-credit">
+        Abhijith R
+      </div>
     </div>
 
+    <!-- Star Animation Script -->
     <script>
-      // Setup canvas and context
       const canvas = document.getElementById("starCanvas");
       const ctx = canvas.getContext("2d");
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-
-      // Parameters
       const numStars = 1100;
       const sphereRadius = 3;
       const stars = [];
-
-      // Camera settings for perspective projection
       const cameraZ = 3;
-      const scaleFactor = Math.min(canvas.width, canvas.height) / 4;
-
-      // Fixed rotation around Z-axis (45°)
+      let scaleFactor = Math.min(canvas.width, canvas.height) / 4;
       const fixedAngle = Math.PI / 4;
       const cosFixed = Math.cos(fixedAngle);
       const sinFixed = Math.sin(fixedAngle);
-
-      // Utility: generate a uniformly distributed point in a sphere of given radius
       function randomPointInSphere(radius) {
-        const u = Math.random();
-        const v = Math.random();
-        const w = Math.random();
+        const u = Math.random(); const v = Math.random(); const w = Math.random();
         const r = radius * Math.cbrt(u);
-        const theta = Math.acos(1 - 2 * v);
-        const phi = 2 * Math.PI * w;
+        const theta = Math.acos(1 - 2 * v); const phi = 2 * Math.PI * w;
         const x = r * Math.sin(theta) * Math.cos(phi);
         const y = r * Math.sin(theta) * Math.sin(phi);
         const z = r * Math.cos(theta);
         return { x, y, z };
       }
-
-      // Generate the stars
-      for (let i = 0; i < numStars; i++) {
-        stars.push(randomPointInSphere(sphereRadius));
-      }
-
-      // Dynamic rotation angles (start at 0)
-      let rotationX = 0;
-      let rotationY = 0;
-      let lastTime = performance.now();
-
+      for (let i = 0; i < numStars; i++) { stars.push(randomPointInSphere(sphereRadius)); }
+      let rotationX = 0; let rotationY = 0; let lastTime = performance.now();
       function animate(currentTime) {
-        const delta = (currentTime - lastTime) / 1000;
-        lastTime = currentTime;
-        rotationX -= delta / 10;
-        rotationY -= delta / 15;
-
+        const delta = (currentTime - lastTime) / 1000; lastTime = currentTime;
+        rotationX -= delta * 0.05; rotationY -= delta * 0.08;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "white";
-
-        // For each star, apply rotations and perspective projection
+        ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+        const cosX = Math.cos(rotationX); const sinX = Math.sin(rotationX);
+        const cosY = Math.cos(rotationY); const sinY = Math.sin(rotationY);
         for (let i = 0; i < numStars; i++) {
-          const star = stars[i];
-          let { x, y, z } = star;
-
-          // Dynamic Rotation around X-axis
-          const cosX = Math.cos(rotationX);
-          const sinX = Math.sin(rotationX);
-          let y1 = y * cosX - z * sinX;
-          let z1 = y * sinX + z * cosX;
-
-          // Rotation around Y-axis
-          const cosY = Math.cos(rotationY);
-          const sinY = Math.sin(rotationY);
-          let x1 = x * cosY + z1 * sinY;
-          let z2 = -x * sinY + z1 * cosY;
-
-          // Fixed Rotation around Z-axis (45°)
-          let x2 = x1 * cosFixed - y1 * sinFixed;
-          let y2 = x1 * sinFixed + y1 * cosFixed;
-          let z3 = z2;
-
-          // Perspective Projection
-          const perspective = cameraZ / (cameraZ - z3);
-          const screenX = x2 * perspective * scaleFactor + canvas.width / 2;
-          const screenY = y2 * perspective * scaleFactor + canvas.height / 2;
-
-          // Draw star as a small circle
-          const size = 0.5;
-          ctx.beginPath();
-          ctx.arc(screenX, screenY, size, 0, 2 * Math.PI);
-          ctx.fill();
+          const star = stars[i]; let { x, y, z } = star;
+          let x_y = x * cosY + z * sinY; let z_y = -x * sinY + z * cosY;
+          let y_x = y * cosX - z_y * sinX; let z_x = y * sinX + z_y * cosX;
+          let x_final = x_y * cosFixed - y_x * sinFixed; let y_final = x_y * sinFixed + y_x * cosFixed;
+          let z_final = z_x;
+          if (cameraZ - z_final <= 0.1) continue;
+          const perspective = cameraZ / (cameraZ - z_final);
+          if (perspective < 0 || perspective > 100) continue;
+          const screenX = x_final * perspective * scaleFactor + canvas.width / 2;
+          const screenY = y_final * perspective * scaleFactor + canvas.height / 2;
+          const size = Math.max(0.1, perspective * 0.6);
+          const opacity = Math.max(0.1, Math.min(1, perspective * 0.4));
+          ctx.globalAlpha = opacity;
+          ctx.beginPath(); ctx.arc(screenX, screenY, size, 0, 2 * Math.PI); ctx.fill();
         }
-
+        ctx.globalAlpha = 1.0;
         requestAnimationFrame(animate);
       }
-
       requestAnimationFrame(animate);
-
-      // Resize canvas when window size changes
       window.addEventListener("resize", () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        scaleFactor = Math.min(canvas.width, canvas.height) / 4;
       });
     </script>
-  </body>
+
+    <!-- Typing Animation Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const taglineEl = document.getElementById('typing-tagline');
+            // Find the cursor span specifically
+            const cursorEl = taglineEl ? taglineEl.querySelector('.cursor') : null;
+
+            if (!taglineEl || !cursorEl) {
+                console.error("Tagline or cursor element not found!");
+                return;
+            }
+
+            const words = [
+                'Developer',
+                'Coder',
+                'Tinkerer',
+                'Engineer',
+                'Designer?',
+                'Learner',
+                'Innovator',
+                'Technophile '
+            ];
+            let wordIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            const typingSpeed = 120;
+            const deletingSpeed = 60;
+            const pauseBeforeDelete = 1500;
+            const pauseBeforeType = 300;
+
+            function type() {
+                const currentWord = words[wordIndex];
+                let textToDisplay = '';
+                let timeoutSpeed = typingSpeed;
+
+                if (isDeleting) {
+                    textToDisplay = currentWord.substring(0, charIndex - 1);
+                    charIndex--;
+                    timeoutSpeed = deletingSpeed;
+                } else {
+                    textToDisplay = currentWord.substring(0, charIndex + 1);
+                    charIndex++;
+                    timeoutSpeed = typingSpeed;
+                }
+
+                // Set text content excluding the cursor first
+                taglineEl.textContent = textToDisplay;
+                // Then append the cursor element
+                taglineEl.appendChild(cursorEl);
+
+                if (!isDeleting && charIndex === currentWord.length) {
+                    timeoutSpeed = pauseBeforeDelete;
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    timeoutSpeed = pauseBeforeType;
+                    isDeleting = false;
+                    wordIndex = (wordIndex + 1) % words.length;
+                }
+
+                // Ensure the function continues to call itself
+                setTimeout(type, timeoutSpeed);
+            }
+            // Start the animation
+            setTimeout(type, pauseBeforeType + 500);
+        });
+    </script>
+
+</body>
 </html>
