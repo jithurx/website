@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    container_name: portal-caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+      - caddy-config:/config
+    environment:
+      - ACME_AGREE=true
+    networks:
+      - portal-net
+    restart: unless-stopped
+    depends_on:
+      - portal
+      - vaultwarden
+
+  portal:
+    build: ./portal
+    container_name: portal-app
+    ports:
+      - "3000"
+    volumes:
+      - portal-data:/data
+      - ./portal/.env:/app/.env
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_PATH=/data/portal.db
+      - LOG_FILE=/data/logs/portal.log
+      - PORTAL_SECRET=${PORTAL_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+    networks:
+      - portal-net
+    restart: unless-stopped
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    container_name: portal-redis
+    volumes:
+      - redis-data:/data
+    networks:
+      - portal-net
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-}
+
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: portal-vaultwarden
+    volumes:
+      - vaultwarden-data:/data
+    environment:
+      - DOMAIN=https://example.com
+      - SIGNUPS_ALLOWED=false
+      - INVITATIONS_ALLOWED=false
+      - SHOW_PASSWORD_HINT=false
+      - LOG_LEVEL=info
+    networks:
+      - portal-net
+    restart: unless-stopped
+
+volumes:
+  portal-data:
+    driver: local
+  redis-data:
+    driver: local
+  vaultwarden-data:
+    driver: local
+  caddy-data:
+    driver: local
+  caddy-config:
+    driver: local
+
+networks:
+  portal-net:
+    driver: bridge
