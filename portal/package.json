@@ -1,0 +1,48 @@
+{
+  "name": "hidden-portal",
+  "version": "1.0.0",
+  "description": "Hidden personal portal with multi-factor authentication",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "lint": "eslint src/**/*.ts",
+    "db:init": "node dist/scripts/initDb.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "connect-sqlite3": "^0.9.13",
+    "sqlite3": "^5.1.6",
+    "better-sqlite3": "^9.2.2",
+    "argon2": "^0.31.2",
+    "speakeasy": "^2.0.0",
+    "@simplewebauthn/server": "^9.0.0",
+    "@simplewebauthn/browser": "^9.0.0",
+    "jsonwebtoken": "^9.1.2",
+    "uuid": "^9.0.1",
+    "dotenv": "^16.3.1",
+    "helmet": "^7.1.0",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2",
+    "compression": "^1.7.4",
+    "winston": "^3.11.0",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.6",
+    "@types/argon2": "^0.15.5",
+    "@types/speakeasy": "^2.0.10",
+    "@types/uuid": "^9.0.7",
+    "@types/compression": "^1.7.5",
+    "tsx": "^4.7.0",
+    "eslint": "^8.56.0",
+    "@typescript-eslint/eslint-plugin": "^6.17.0",
+    "@typescript-eslint/parser": "^6.17.0"
+  }
+}
