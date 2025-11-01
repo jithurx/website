@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=General+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;500&display=swap');
+@import url('https://rsms.me/inter/inter.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-general-sans: 'General Sans', sans-serif;
+  --font-instrument-serif: 'Instrument Serif', serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #0f0f1e 100%);
+  color: #e0e0e0;
+  font-family: var(--font-general-sans);
+  overflow-x: hidden;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 15, 30, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00d9ff;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00bfcc;
+}
+
+/* Glassmorphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Neon glow effects */
+.glow-cyan {
+  text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+}
+
+.glow-magenta {
+  text-shadow: 0 0 10px rgba(255, 0, 110, 0.5);
+}
+
+/* Smooth transitions */
+a, button {
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+/* Remove default button styles */
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* Focus states for accessibility */
+a:focus, button:focus {
+  outline: 2px solid #00d9ff;
+  outline-offset: 2px;
+}
