@@ -12,6 +12,9 @@ import { initDatabase } from './models/database.js'
 import logger from './utils/logger.js'
 import { headerSecretMiddleware } from './middleware/headerSecret.js'
 import authRoutes from './routes/auth.js'
+import vaultRoutes from './routes/vault.js'
+import fileRoutes from './routes/files.js'
+import adminRoutes from './routes/admin.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
