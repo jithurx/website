@@ -1,0 +1,108 @@
+---
+---
+
+<p id="typing-tagline" class="tagline"><span class="cursor">|</span></p>
+
+<style>
+	/* --- Typing Animation Tagline Styles --- */
+	.tagline {
+		font-family: 'Pixelify Sans', sans-serif;
+		font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+		color: var(--color-text-muted);
+		margin-bottom: 3rem;
+		max-width: 90%;
+		min-height: 2.8em;
+		line-height: 1.4;
+		letter-spacing: 1px;
+		text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	.tagline .cursor {
+		display: inline-block;
+		border-radius: 20px;
+		background-color: var(--color-secondary-glow);
+		box-shadow: 0 0 5px var(--color-secondary-glow);
+		width: 10px;
+		height: 1.4em;
+		margin-left: 5px;
+		vertical-align: middle;
+		animation: blink 0.7s infinite steps(1, start);
+	}
+
+	@keyframes blink {
+		50% {
+			opacity: 0;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.tagline {
+			font-size: clamp(1rem, 3vw, 1.5rem);
+			min-height: 2.4em;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.tagline {
+			min-height: 4em;
+		}
+	}
+</style>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const taglineEl = document.getElementById('typing-tagline');
+		const cursorEl = taglineEl ? taglineEl.querySelector('.cursor') : null;
+		if (!taglineEl || !cursorEl) {
+			console.error('Typing tagline/cursor missing!');
+			return;
+		}
+		const words = [
+			'building things',
+			'writing code',
+			'exploring ideas',
+			'making stuff work',
+			'solving problems',
+			'learning new tech',
+			'sometimes designing',
+			'sometimes breaking stuff'
+		];
+		let wordIndex = 0;
+		let charIndex = 0;
+		let isDeleting = false;
+		const typingSpeed = 110;
+		const deletingSpeed = 55;
+		const pauseBeforeDelete = 1400;
+		const pauseBeforeType = 250;
+		function type() {
+			const currentWord = words[wordIndex];
+			let textToDisplay = '';
+			let timeoutSpeed = typingSpeed;
+			if (isDeleting) {
+				textToDisplay = currentWord.substring(0, charIndex - 1);
+				charIndex--;
+				timeoutSpeed = deletingSpeed;
+			} else {
+				textToDisplay = currentWord.substring(0, charIndex + 1);
+				charIndex++;
+				timeoutSpeed = typingSpeed;
+			}
+            // @ts-ignore
+			taglineEl.textContent = textToDisplay;
+            // @ts-ignore
+			taglineEl.appendChild(cursorEl);
+			if (!isDeleting && charIndex === currentWord.length) {
+				timeoutSpeed = pauseBeforeDelete;
+				isDeleting = true;
+			} else if (isDeleting && charIndex === 0) {
+				timeoutSpeed = pauseBeforeType;
+				isDeleting = false;
+				wordIndex = (wordIndex + 1) % words.length;
+			}
+			setTimeout(type, timeoutSpeed);
+		}
+		setTimeout(type, pauseBeforeType + 500);
+	});
+</script>

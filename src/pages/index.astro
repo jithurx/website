@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+import StarCanvas from '../components/StarCanvas.astro';
+import ProfilePhoto from '../components/ProfilePhoto.astro';
+import NameHeading from '../components/NameHeading.astro';
+import TypingTagline from '../components/TypingTagline.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+import FooterCredit from '../components/FooterCredit.astro';
+---
+
+<Layout title="jithurx">
+	<!-- Canvas for Star Animation -->
+	<StarCanvas />
+
+	<!-- Main Content Container -->
+	<div class="content-container">
+		<!-- Profile Photo -->
+		<ProfilePhoto />
+		
+		<!-- Interactive Name Heading -->
+		<NameHeading />
+
+		<!-- Tagline with Typing Animation -->
+		<TypingTagline />
+
+		<!-- Social Media Links -->
+		<SocialLinks />
+
+		<!-- Footer Credit -->
+		<FooterCredit />
+	</div>
+</Layout>
