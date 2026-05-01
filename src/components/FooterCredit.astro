@@ -1,0 +1,37 @@
+---
+---
+
+<div class="footer-credit">
+	&lt;-&gt;
+</div>
+
+<style>
+	/* --- Footer Credit Styles --- */
+	.footer-credit {
+		position: absolute;
+		bottom: 15px;
+		left: 50%;
+		transform: translateX(-50%);
+		font-family: 'Pixelify Sans', sans-serif;
+		font-size: 1rem;
+		font-weight: 700;
+		color: var(--color-text-muted);
+		padding: 5px 10px;
+		background-color: rgba(0, 0, 0, 0.3);
+		border-radius: 4px;
+		transition:
+			color 0.3s,
+			background-color 0.3s;
+	}
+
+	.footer-credit:hover {
+		color: var(--color-accent1-glow);
+		background-color: rgba(0, 0, 0, 0.5);
+	}
+
+	@media (max-width: 768px) {
+		.footer-credit {
+			font-size: 0.8rem;
+		}
+	}
+</style>

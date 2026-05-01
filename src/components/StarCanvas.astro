@@ -1,0 +1,119 @@
+---
+---
+
+<canvas id="starCanvas"></canvas>
+
+<style>
+	canvas#starCanvas {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 0;
+		display: block;
+	}
+</style>
+
+<script>
+	const canvas = document.getElementById('starCanvas');
+	if (canvas instanceof HTMLCanvasElement) {
+		const ctx = canvas.getContext('2d');
+		if (ctx) {
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+			const numStars = 1100;
+			const sphereRadius = 3;
+			const stars: { x: number; y: number; z: number }[] = [];
+			const cameraZ = 3;
+			let scaleFactor = Math.min(canvas.width, canvas.height) / 4;
+			const fixedAngle = Math.PI / 4;
+			const cosFixed = Math.cos(fixedAngle);
+			const sinFixed = Math.sin(fixedAngle);
+
+			function randomPointInSphere(radius: number) {
+				const u = Math.random();
+				const v = Math.random();
+				const w = Math.random();
+				const r = radius * Math.cbrt(u);
+				const theta = Math.acos(1 - 2 * v);
+				const phi = 2 * Math.PI * w;
+				const x = r * Math.sin(theta) * Math.cos(phi);
+				const y = r * Math.sin(theta) * Math.sin(phi);
+				const z = r * Math.cos(theta);
+				return { x, y, z };
+			}
+
+			for (let i = 0; i < numStars; i++) {
+				stars.push(randomPointInSphere(sphereRadius));
+			}
+
+			let rotationX = 0;
+			let rotationY = 0;
+			let lastTime = performance.now();
+
+			function animate(currentTime: number) {
+				const delta = (currentTime - lastTime) / 1000;
+				lastTime = currentTime;
+				rotationX -= delta * 0.05;
+				rotationY -= delta * 0.08;
+                // @ts-ignore
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+                // @ts-ignore
+				ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+
+				const cosX = Math.cos(rotationX);
+				const sinX = Math.sin(rotationX);
+				const cosY = Math.cos(rotationY);
+				const sinY = Math.sin(rotationY);
+
+				for (let i = 0; i < numStars; i++) {
+					const star = stars[i];
+					let { x, y, z } = star;
+					let x_y = x * cosY + z * sinY;
+					let z_y = -x * sinY + z * cosY;
+					let y_x = y * cosX - z_y * sinX;
+					let z_x = y * sinX + z_y * cosX;
+					let x_final = x_y * cosFixed - y_x * sinFixed;
+					let y_final = x_y * sinFixed + y_x * cosFixed;
+					let z_final = z_x;
+
+					if (cameraZ - z_final <= 0.1) continue;
+
+					const perspective = cameraZ / (cameraZ - z_final);
+					if (perspective < 0 || perspective > 100) continue;
+
+                    // @ts-ignore
+					const screenX = x_final * perspective * scaleFactor + canvas.width / 2;
+                    // @ts-ignore
+					const screenY = y_final * perspective * scaleFactor + canvas.height / 2;
+					const size = Math.max(0.1, perspective * 0.6);
+					const opacity = Math.max(0.1, Math.min(1, perspective * 0.4));
+
+                    // @ts-ignore
+					ctx.globalAlpha = opacity;
+                    // @ts-ignore
+					ctx.beginPath();
+                    // @ts-ignore
+					ctx.arc(screenX, screenY, size, 0, 2 * Math.PI);
+                    // @ts-ignore
+					ctx.fill();
+				}
+                // @ts-ignore
+				ctx.globalAlpha = 1.0;
+				requestAnimationFrame(animate);
+			}
+
+			requestAnimationFrame(animate);
+
+			window.addEventListener('resize', () => {
+                // @ts-ignore
+				canvas.width = window.innerWidth;
+                // @ts-ignore
+				canvas.height = window.innerHeight;
+                // @ts-ignore
+				scaleFactor = Math.min(canvas.width, canvas.height) / 4;
+			});
+		}
+	}
+</script>

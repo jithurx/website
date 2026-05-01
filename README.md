@@ -1,7 +1,20 @@
-# website
-My Website
+# jithurx
 
-## License
+This is my personal website.
 
-This project is licensed under the Creative Commons CC0 1.0 Universal (public domain).
-See [LICENSE](LICENSE) for more details.
+## Setup Instructions
+
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+3. Build for production:
+   ```bash
+   npm run build
+   ```
