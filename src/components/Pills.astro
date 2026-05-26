@@ -1,0 +1,109 @@
+---
+import * as config from '../config.md';
+
+const blogLink = config.frontmatter.blogLink || 'https://blogs.jithurx.dev';
+const steamLink = config.frontmatter.steamLink || 'https://steamcommunity.com/profiles/76561198766287519/';
+---
+<div class="pill-wrapper">
+	<a href={blogLink} target="_blank" rel="noopener noreferrer" class="pill blog-pill">
+		Blogs&gt;
+	</a>
+	<a href={steamLink} target="_blank" rel="noopener noreferrer" class="pill steam-pill">
+		Steam&gt;
+	</a>
+</div>
+
+<style>
+	.pill-wrapper {
+		position: absolute;
+		left: 100%;
+		margin-left: 50px;
+		top: 15px;
+		z-index: 2;
+		display: flex;
+		flex-direction: column;
+		gap: 0.8rem;
+	}
+
+	.pill {
+		padding: 0.5rem 1.2rem;
+		border-radius: 2rem;
+		font-family: 'Bitcount Grid Single', sans-serif;
+		font-weight: 700;
+		text-decoration: none;
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+		position: relative;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+
+	.pill::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: -150%;
+		width: 50%;
+		height: 100%;
+		background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%);
+		transform: skewX(-20deg);
+		animation: shine var(--shine-duration, 4s) infinite var(--shine-delay, 0s);
+	}
+
+	@keyframes shine {
+		0% { left: -150%; }
+		15% { left: 200%; }
+		100% { left: 200%; }
+	}
+
+	.pill:hover {
+		transform: scale(1.1);
+	}
+
+	.blog-pill {
+		background: var(--color-secondary-glow);
+		color: var(--color-bg-dark);
+		box-shadow: 0 4px 15px rgba(212, 255, 58, 0.3);
+	}
+
+	.blog-pill:hover {
+		box-shadow: 0 6px 20px rgba(212, 255, 58, 0.6);
+	}
+
+	.steam-pill {
+		background: #66c0f4;
+		color: var(--color-bg-dark);
+		box-shadow: 0 4px 15px rgba(102, 192, 244, 0.3);
+	}
+
+	.steam-pill:hover {
+		box-shadow: 0 6px 20px rgba(102, 192, 244, 0.6);
+	}
+
+	@media (max-width: 480px) {
+		.pill-wrapper {
+			left: 100%;
+			margin-left: 25px;
+		}
+
+		.pill {
+			font-size: 0.9rem;
+			padding: 0.4rem 0.8rem;
+		}
+	}
+</style>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const pills = document.querySelectorAll('.pill');
+		pills.forEach((pill) => {
+			// Randomize the animation delay and duration for each pill
+			// @ts-ignore
+			pill.style.setProperty('--shine-delay', `${Math.random() * 5}s`);
+			// @ts-ignore
+			pill.style.setProperty('--shine-duration', `${3 + Math.random() * 4}s`);
+		});
+	});
+</script>

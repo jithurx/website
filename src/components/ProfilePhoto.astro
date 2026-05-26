@@ -1,5 +1,5 @@
 ---
-import BlogPill from './BlogPill.astro';
+import Pills from './Pills.astro';
 import * as config from '../config.md';
 
 const profilePhoto = config.frontmatter.profilePhoto || '/images/me_pixel.png';
@@ -8,7 +8,7 @@ const profilePhoto = config.frontmatter.profilePhoto || '/images/me_pixel.png';
 <div class="profile-photo-container">
 	<div class="photo-wrapper">
 		<img src={profilePhoto} alt="Profile Photo" class="profile-photo" />
-		<BlogPill />
+		<Pills />
 	</div>
 </div>
 

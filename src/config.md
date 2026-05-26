@@ -17,4 +17,5 @@ social:
   spotify: https://open.spotify.com/user/qy1bghbyedamwm6livaxp7xc0
   pinterest: https://pinterest.com/jithuxr
 blogLink: https://blogs.jithurx.dev
+steamLink: https://steamcommunity.com/profiles/76561198766287519/
 ---
