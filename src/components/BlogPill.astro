@@ -1,0 +1,62 @@
+---
+import * as config from '../config.md';
+
+const blogLink = config.frontmatter.blogLink || 'https://blogs.jithurx.dev';
+---
+<div class="blog-pill-wrapper">
+	<a href={blogLink} target="_blank" rel="noopener noreferrer" class="blog-pill">
+		Blogs&gt;
+	</a>
+</div>
+
+<style>
+	.blog-pill-wrapper {
+		position: absolute;
+		left: 100%;
+		margin-left: 50px;
+		top: 15px;
+		animation: float 4s ease-in-out infinite;
+		z-index: 2;
+	}
+
+	@keyframes float {
+		0%, 100% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(-10px);
+		}
+	}
+
+	.blog-pill {
+		background: var(--color-secondary-glow);
+		color: var(--color-bg-dark);
+		padding: 0.5rem 1.2rem;
+		border-radius: 2rem;
+		font-family: 'Bitcount Grid Single', sans-serif;
+		font-weight: 700;
+		text-decoration: none;
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		box-shadow: 0 4px 15px rgba(212, 255, 58, 0.3);
+		transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+	}
+
+	.blog-pill:hover {
+		transform: scale(1.1);
+		box-shadow: 0 6px 20px rgba(212, 255, 58, 0.6);
+	}
+
+	@media (max-width: 480px) {
+		.blog-pill-wrapper {
+			left: 100%;
+			margin-left: 25px;
+		}
+
+		.blog-pill {
+			font-size: 0.9rem;
+			padding: 0.4rem 0.8rem;
+		}
+	}
+</style>

@@ -1,7 +1,14 @@
 ---
+import * as config from '../config.md';
+
+const taglines = config?.frontmatter?.taglines || [
+	'building things',
+	'writing code',
+	'exploring ideas'
+];
 ---
 
-<p id="typing-tagline" class="tagline"><span class="cursor">|</span></p>
+<p id="typing-tagline" class="tagline" data-words={JSON.stringify(taglines)}><span class="cursor">|</span></p>
 
 <style>
 	/* --- Typing Animation Tagline Styles --- */
@@ -59,16 +66,16 @@
 			console.error('Typing tagline/cursor missing!');
 			return;
 		}
-		const words = [
-			'building things',
-			'writing code',
-			'exploring ideas',
-			'making stuff work',
-			'solving problems',
-			'learning new tech',
-			'sometimes designing',
-			'sometimes breaking stuff'
-		];
+		let words = [];
+		try {
+			words = JSON.parse(taglineEl.getAttribute('data-words') || '[]');
+		} catch (e) {
+			console.error('Failed to parse taglines from data attribute', e);
+		}
+
+		if (words.length === 0) {
+			words = ['building things']; // fallback
+		}
 		let wordIndex = 0;
 		let charIndex = 0;
 		let isDeleting = false;
