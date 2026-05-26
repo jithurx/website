@@ -2,7 +2,14 @@
 ---
 
 <div class="social-links">
-	<a href="https://github.com/jithurx" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="github" title="GitHub"><i class="fab fa-github"></i></a>
+	<div class="git-dropdown">
+		<div class="git-icon" aria-label="Git" title="Git Repositories"><i class="fab fa-git-alt"></i></div>
+		<div class="git-dropdown-content">
+			<a href="https://gitlab.com/jithurx" target="_blank" rel="noopener noreferrer" aria-label="GitLab" class="gitlab" title="GitLab"><i class="fab fa-gitlab"></i></a>
+			<a href="https://github.com/jithurx" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="github" title="GitHub"><i class="fab fa-github"></i></a>
+			<a href="https://codeberg.org/jithurx" target="_blank" rel="noopener noreferrer" aria-label="Codeberg" class="codeberg" title="Codeberg"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="codeberg-icon"><title>Codeberg</title><path d="M11.999.747A11.974 11.974 0 0 0 0 12.75c0 2.254.635 4.465 1.833 6.376L11.837 6.19c.072-.092.251-.092.323 0l4.178 5.402h-2.992l.065.239h3.113l.882 1.138h-3.674l.103.374h3.86l.777 1.003h-4.358l.135.483h4.593l.695.894h-5.038l.165.589h5.326l.609.785h-5.717l.182.65h6.038l.562.727h-6.397l.183.65h6.717A12.003 12.003 0 0 0 24 12.75 11.977 11.977 0 0 0 11.999.747zm3.654 19.104.182.65h5.326c.173-.204.353-.433.513-.65zm.385 1.377.18.65h3.563c.233-.198.485-.428.712-.65zm.383 1.377.182.648h1.203c.356-.204.685-.412 1.042-.648z"/></svg></a>
+		</div>
+	</div>
 	<a href="https://linkedin.com/in/jithurx" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="linkedin" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
 	<a href="https://instagram.com/jithurx" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
 	<a href="https://open.spotify.com/user/qy1bghbyedamwm6livaxp7xc0" target="_blank" rel="noopener noreferrer" aria-label="Spotify" class="spotify" title="Spotify"><i class="fab fa-spotify"></i></a>
@@ -11,6 +18,13 @@
 
 <style>
 	/* --- Social Links Styles --- */
+	.codeberg-icon {
+		width: 1em;
+		height: 1em;
+		fill: currentColor;
+		vertical-align: -0.125em;
+	}
+
 	.social-links {
 		display: flex;
 		flex-wrap: wrap;
@@ -18,7 +32,7 @@
 		gap: 1.5rem;
 	}
 
-	.social-links a {
+	.social-links a, .git-icon {
 		color: var(--color-text-light);
 		font-size: 2rem;
 		text-decoration: none;
@@ -28,16 +42,69 @@
 		transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 		display: inline-block;
 		line-height: 1;
+		cursor: pointer;
 	}
 
 	.social-links a:hover {
-		transform: scale(1.2) rotate(-10deg);
+		transform: scale(1.2);
 		border-color: currentColor;
 		box-shadow: 0 0 15px currentColor;
 	}
 
+	.git-dropdown {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.git-dropdown-content {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%) scale(0.5);
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		background: var(--color-bg-dark);
+		border: 1px solid var(--color-border-light);
+		padding: 0.5rem;
+		border-radius: 2rem;
+		opacity: 0;
+		visibility: hidden;
+		transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+		box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+		z-index: 10;
+		pointer-events: none;
+	}
+
+	.git-dropdown:hover .git-dropdown-content {
+		opacity: 1;
+		visibility: visible;
+		transform: translate(-50%, -50%) scale(1);
+		pointer-events: auto;
+	}
+
+	.git-dropdown-content a {
+		font-size: 1.5rem;
+		padding: 0.4rem;
+	}
+
+	.git-dropdown:hover .git-icon {
+		opacity: 0;
+		transform: scale(0.5);
+	}
+
 	.social-links a.github:hover {
 		color: #d6eac1;
+	}
+
+	.social-links a.gitlab:hover {
+		color: #fc6d26;
+	}
+
+	.social-links a.codeberg:hover {
+		color: #2185d0;
 	}
 
 	.social-links a.linkedin:hover {
@@ -61,15 +128,24 @@
 			gap: 1rem;
 		}
 
-		.social-links a {
+		.social-links a, .git-icon {
 			font-size: 1.8rem;
 			padding: 0.4rem;
+		}
+
+		.git-dropdown-content a {
+			font-size: 1.4rem;
+			padding: 0.3rem;
 		}
 	}
 
 	@media (max-width: 480px) {
-		.social-links a {
+		.social-links a, .git-icon {
 			font-size: 1.6rem;
+		}
+
+		.git-dropdown-content a {
+			font-size: 1.2rem;
 		}
 	}
 </style>
